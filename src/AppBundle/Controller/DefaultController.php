@@ -17,11 +17,14 @@ class DefaultController extends Controller
     {
         $repository = $this->getDoctrine()
             ->getRepository("AppBundle:Theme");
+        $postRepository = $this->getDoctrine()
+            ->getRepository("AppBundle:Post");
 
         $list = $repository->getAllThemes()->getArrayResult();
+        $postListByYear = $postRepository->getPostsGroupedByYear();
 
         return $this->render('default/index.html.twig',
-            ["themeList" => $list]);
+            ["themeList" => $list, "postList"=>$postListByYear]);
     }
 
     /**

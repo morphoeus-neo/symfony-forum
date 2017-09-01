@@ -8,9 +8,12 @@
         </li>
     </ol>
 
-    {{ dump(all) }}
 
-    <h1>{{ theme.name }}</h1>
+    {% if theme is defined %}
+        <h1>{{ theme.name }}</h1>
+    {%  elseif title is defined %}
+        <h1>{{ title }}</h1>
+    {% endif %}
 
     <table class="table">
         <tbody>

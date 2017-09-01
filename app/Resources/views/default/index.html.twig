@@ -20,5 +20,13 @@
     </table>
 
 {% endblock %}
+{% block aside%}
+<h3>Les posts par années</h3>
+    <ul>
+        {%  for item in postList %}
+        <li>{{ item.yearPublished }} ({{ item.numberOfPosts }})</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
 
 

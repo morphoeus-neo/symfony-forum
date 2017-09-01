@@ -10,4 +10,15 @@ namespace AppBundle\Repository;
  */
 class PostRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getPostsGroupByYear(){
+
+        $queryBuilder= $this->createQueryBuilder("p");
+
+        $queryBuilder->select("YEAR(p.createdAt)as yearPublished,
+                                      COUNT(p.id) as numberOfPosts")
+            ->groupBy("yearPublished");
+
+        return $queryBuilder->getQuery()->getArrayResult();
+
+    }
 }

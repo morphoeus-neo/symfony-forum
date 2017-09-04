@@ -21,4 +21,17 @@ class PostRepository extends \Doctrine\ORM\EntityRepository
         return $queryBuilder->getQuery()->getArrayResult();
 
     }
+
+    public function getPostsByYear($year){
+
+        // je récupère une instance du querry builder
+        $qb = $this->createQueryBuilder("p");
+
+        $qb ->select("p")
+            ->where("YEAR(p.createdAt)=:year")
+            ->setParameter("year", $year);
+
+        return $qb->getQuery()->getResult();
+
+    }
 }

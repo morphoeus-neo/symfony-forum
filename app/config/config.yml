@@ -38,6 +38,9 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    form_themes:
+    # situé dans Vendor\symfony\symfony\src\Symfony\Bridge\Twig\Resources\views\Form
+      - "bootstrap_3_layout.html.twig"
 
 # Doctrine Configuration
 doctrine:

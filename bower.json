@@ -1,9 +1,6 @@
 {
   "name": "symfony-forum",
   "homepage": "https://github.com/smaloron/symfony-forum",
-  "authors": [
-    "morphoeus-neo <aurelien.courgeau@gmail.com>"
-  ],
   "description": "",
   "main": "",
   "license": "MIT",

@@ -17,16 +17,14 @@ class DefaultController extends Controller
     {
         $repository = $this->getDoctrine()
             ->getRepository("AppBundle:Theme");
-        $postRepository =$this->getDoctrine()->getRepository("AppBundle:Post");
+        $postRepository = $this->getDoctrine()
+            ->getRepository("AppBundle:Post");
 
-        //$themeList = $repository->findAll();
         $list = $repository->getAllThemes()->getArrayResult();
-        $postListByYear = $postRepository->getPostsGroupByYear();
+        $postListByYear = $postRepository->getPostsGroupedByYear();
 
-
-        //return $this->render('default/index.html.twig', ["themeList" => $themeList, "list"=>$list]);
-        return $this->render('default/index.html.twig', ["themeList" =>$list, "postList"=>$postListByYear]);
-
+        return $this->render('default/index.html.twig',
+            ["themeList" => $list, "postList"=>$postListByYear]);
     }
 
     /**
@@ -40,8 +38,8 @@ class DefaultController extends Controller
             ->getRepository("AppBundle:Theme");
 
         $theme = $repository->find($id);
-        $allThemes = $repository->getAllThemes()->getResult();
 
+        $allThemes = $repository->getAllThemes()->getArrayResult();
 
         if(! $theme){
             throw new NotFoundHttpException("Thème introuvable");
@@ -51,7 +49,7 @@ class DefaultController extends Controller
         return $this->render('default/theme.html.twig', [
             "theme" => $theme,
             "postList" => $theme->getPosts(),
-            "all" =>$allThemes
+            "all" => $allThemes
         ]);
     }
 }

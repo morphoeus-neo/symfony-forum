@@ -33,17 +33,6 @@
     </ul>
 {% endblock %}
 
-{% block aside %}
-    <h3>Les posts par années</h3>
-    <ul>
-        {% for item in postList %}
-            <li>
-                <a href="{{ path('post_by_year', {'year': item.yearPublished}) }}">
-                    {{ item.yearPublished }} ({{ item.numberOfPosts }})
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-{% endblock %}
+
 
 

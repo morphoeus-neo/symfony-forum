@@ -10,7 +10,7 @@ namespace AppBundle\Repository;
  */
 class PostRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function getPostsGroupByYear(){
+    public function getPostsGroupedByYear(){
 
         $queryBuilder= $this->createQueryBuilder("p");
 

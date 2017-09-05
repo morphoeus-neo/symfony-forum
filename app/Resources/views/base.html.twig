@@ -24,6 +24,12 @@
             </aside>
         </div>
 
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+
+        <script src="{{ asset('bower-components/jquery/dist/jquery.min.js') }}"></script>
+            <script src="{{ asset('bower-components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+
+
+        {% endblock %}
     </body>
 </html>

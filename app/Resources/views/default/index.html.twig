@@ -19,6 +19,16 @@
         {% endfor %}
         </tbody>
     </table>
+<br>
+    <hr>
+    <h2>Enregistrement d'un nouveau Post</h2>
+    <br>
+    <hr>
+
+    {{ form(postForm) }}
+
+
+
 
 {% endblock %}
 {% block aside%}
@@ -31,6 +41,12 @@
             </a></li>
         {% endfor %}
     </ul>
+{% endblock %}
+
+{% block javascripts%}
+    <script src="{{ asset('bundles/ivoryckeditor/ckeditor.js') }}"></script>
+
+
 {% endblock %}
 
 

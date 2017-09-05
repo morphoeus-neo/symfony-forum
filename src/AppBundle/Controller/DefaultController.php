@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Author;
 use AppBundle\Entity\Post;
+use AppBundle\Form\AuthorType;
 use AppBundle\Form\PostType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -70,5 +72,70 @@ class DefaultController extends Controller
             "postList" => $theme->getPosts(),
             "all" => $allThemes
         ]);
+    }
+
+    /**
+     * @Route("/inscription", name="author_registration")
+     * @param Request $request
+     * @return Response
+     */
+    public function registrationAction(Request $request){
+
+        $author = new Author();
+
+        //creer une instance de formulaire
+        $form = $this->createForm(
+            AuthorType::class,
+            $author
+        );
+
+        //hydratation du formulaire
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() and $form->isValid()){
+            $entityManager = $this->getDoctrine()->getManager();
+
+            //encodage du mot de passe
+            $encoderFactory = $this->get("security.encoder_factory");
+            $encoder = $encoderFactory->getEncoder($author);
+            $author->setPassword($encoder->encodePassword($author->getPlainPassword(), null));
+            $author->setPlainPassword(null);
+
+            $entityManager->persist($author);
+            $entityManager->flush();
+
+            //Redirection
+            return $this->redirectToRoute("homepage");
+        }
+
+        return $this->render("default/author-registration.html.twig", [
+            "registrationForm" => $form->createView()
+        ]);
+
+
+
+
+    }
+
+
+    /**
+     * @Route("/author-login", name="author_login")
+     * @return Response
+     */
+    public function authorLoginAction(){
+
+        $securityUtils = $this->get("security.authentication_utils");
+
+
+        return $this->render(":default:generic-login.html.twig",
+            [
+                "title"=>"Identification des auteurs",
+                "action"=>$this->generateUrl("author_login_check"),
+                "userName"=>$securityUtils->getLastAuthenticationError()
+
+
+
+            ]
+        );
     }
 }

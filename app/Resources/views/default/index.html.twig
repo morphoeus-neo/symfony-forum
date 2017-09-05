@@ -20,6 +20,10 @@
         </tbody>
     </table>
 
+    <h2>Nouveau post</h2>
+
+    {{ form(postForm) }}
+
 {% endblock %}
 
 {% block aside %}
@@ -33,6 +37,12 @@
             </li>
         {% endfor %}
     </ul>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('bundles/ivoryckeditor/ckeditor.js') }}"></script>
 {% endblock %}
 
 

@@ -5,7 +5,7 @@ namespace AppBundle\Form;
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -22,16 +22,20 @@ class PostType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, ["label"=>"Titre"])
-            ->add('text', ckeditorType::class,[
-                "label"=>"Texte",
-                "attr"=>["rows"=> 12]])
-            ->add('author', EmailType::class, ["label"=>"Auteur"])
-            ->add('createdAt', DateType::class, ["label"=>"Date de publication"])
+            ->add('text', CKEditorType::class, [
+                "label" => "Texte",
+                "attr" => ["rows" => 12]
+            ])
+            ->add('author', EmailType::class, ["label" => "Auteur"])
+            ->add('createdAt', DateTimeType::class,
+                ["label" => "Date de publication", "widget" => "single_text"]
+            )
             ->add('theme', EntityType::class, [
-                "class"=>"AppBundle\Entity\Theme",
-                "placeholder"=>"Choisir un theme",
-                "choice_label"=>"name"])
-            ->add('submit', SubmitType::class, ["label"=>"Valider", "attr"=> ["class"=>"btn btn-primary"]]);
+                "class" => "AppBundle\Entity\Theme",
+                "placeholder" => "Choisissez un thème",
+                "choice_label" => "name"
+            ])
+            ->add('submit', SubmitType::class, ["label" => "Valider"]);
     }
     
     /**

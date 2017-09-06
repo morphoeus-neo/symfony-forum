@@ -1,6 +1,3 @@
-Bad credentials.: Login et ou mot de passe incorrect
-Invalid credentials.: Mauvaises information d'auth
-user.bad-credentials.swear.: beurkkk les identifiants et ou mots de passe sont pourroi
-user:
-  bad-credentials:
-    swear: 'messages'
+Bad credentials.: Login et/ou mot de passe incorrects
+Invalid credentials.: mauvaises informations d'authentification
+user.bad-credentials.swear: imbécile

@@ -6,7 +6,7 @@ admin_login_check:
   path: /admin/login-check
 
 admin_logout:
-  path: /admin/logout
+  path: admin/logout
 
 author_login_check:
   path: /author/login-check

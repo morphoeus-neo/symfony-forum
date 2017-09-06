@@ -15,8 +15,13 @@ class ThemeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', TextType::class, ["label"=>"Votre thème","required"=>true])
-                ->add("submit", SubmitType::class, ["label"=>"Valider", "attr"=> ["class"=>"btn btn-primary"]]);// SubmitType::class le type de submit sera dynamique
+        $builder->add('name', TextType::class, ["label"=>"Votre thème", "required"=>true])
+                ->add("submit", SubmitType::class,
+                    [
+                        "label"=>"Valider",
+                        "attr" => ["class"=>"btn btn-primary"]
+                    ]
+                );
     }
     
     /**

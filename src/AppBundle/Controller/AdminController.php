@@ -18,7 +18,7 @@ class AdminController extends Controller
 {
 
     /**
-     * @Route("/", name="admin_home")"
+     * @Route("/", name="admin_home")
      * @return Response
      */
     public function indexAction(){
@@ -27,22 +27,21 @@ class AdminController extends Controller
 
     /**
      * @Route("/login", name="admin_login")
+     * @return Response
      */
     public function admin_loginAction(){
+
         $securityUtils = $this->get("security.authentication_utils");
         $lastUserName = $securityUtils->getLastUsername();
         $error = $securityUtils->getLastAuthenticationError();
-      return $this->render("default/generic-login.html.twig",[
-            "action"=>$this->generateUrl("admin_login_check"),
-            "title" => "Login des Administrateurs",
+
+        return $this->render("default/generic-login.html.twig",[
+            "action" => $this->generateUrl("admin_login_check"),
+            "title" => "Login des administrateurs",
             "userName" => $lastUserName,
-            "error" =>$error
-          ]);
+            "error" => $error
+        ]);
     }
-
-
-
-
     /**
      * @Route("/themes", name="admin_themes")
      * @return Response
@@ -53,28 +52,28 @@ class AdminController extends Controller
 
         $themeList = $repository->findAll();
 
-        // génération du formulaire
+        //Génération du formulaire
         $theme = new Theme();
         $form = $this->createForm(ThemeType::class, $theme);
 
-        //hydratation de l'entitée
+        //hydratation de l'entité
         $form->handleRequest($request);
 
-        // Traitement du formulaire
-        if ($form->isSubmitted() and $form->isValid()){
-            //persistance de l'entité
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($theme);
-            $entityManager->flush();
+        //Traitement du formulaire
+        if($form->isSubmitted() and $form->isValid()){
+            //Persistance de l'entité
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($theme);
+            $em->flush();
 
-            // Redirection de la page pour éviter d'envoyer les données postées a l'infini
+            //Redirection pour éviter de poster deux fois les données
             return $this->redirectToRoute("admin_themes");
         }
 
-        return $this->render("admin/theme.html.twig",
-            ["themeList" => $themeList,
-             "themeForm" => $form->createView()
-            ]);
+        return $this->render("admin/theme.html.twig", [
+            "themeList" => $themeList,
+            "themeForm" => $form->createView()
+        ]);
     }
 
     /**
@@ -82,7 +81,6 @@ class AdminController extends Controller
      * @return Response
      */
     public function onlyGodAction(){
-
         return $this->render("admin/god.html.twig");
     }
 

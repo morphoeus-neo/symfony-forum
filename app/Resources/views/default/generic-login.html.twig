@@ -1,10 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
     <h2>{{ title }}</h2>
-    {% if error is defined %}
+
+    {% if error %}
         <div class="alert alert-danger">
             {{ error.message | trans }} {{ 'user.bad-credentials.swear' | trans }}
+
         </div>
     {% endif %}
 
@@ -12,20 +15,18 @@
         <div class="form-group">
             <label for="userName">Login</label>
             <input type="text" name="_username" class="form-control"
-                   id="userName" placeholder="Login" required>
-
+            id="userName" required value="{{ userName }}">
         </div>
+
         <div class="form-group">
             <label for="password">Mot de passe</label>
-            <input type="text" name="_password" class="form-control"
-                   id="password" placeholder="password" required>
-
-        </div>
-        <div>
-            <button class="btn btn-primary btn-block" type="submit" id="valider">Connexion</button>
+            <input type="password" name="_password" class="form-control"
+                   id="password" required>
         </div>
 
-
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Connexion</button>
+        </div>
     </form>
 
 {% endblock %}

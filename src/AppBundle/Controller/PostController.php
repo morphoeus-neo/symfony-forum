@@ -3,14 +3,12 @@
 namespace AppBundle\Controller;
 
 
-use AppBundle\AppBundle;
-use AppBundle\Entity\Post;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use AppBundle\Entity\Post;
 
 class PostController extends Controller
 {
@@ -27,9 +25,7 @@ class PostController extends Controller
         $repository = $this->getDoctrine()
             ->getRepository("AppBundle:Post");
 
-        /**
-         * @var $post Post
-         */
+        /** @var $post Post */
         $post = $repository->findOneBySlug($slug);
 
         if(! $post){

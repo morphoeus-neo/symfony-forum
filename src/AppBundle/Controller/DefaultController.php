@@ -26,14 +26,18 @@ class DefaultController extends Controller
 
         $list = $repository->getAllThemes()->getArrayResult();
         $postListByYear = $postRepository->getPostsGroupedByYear();
-        //Création du formulaire "post"
-        $post = new Post();
-        $form =$this->createForm(PostType::class, $post);
 
-        //hydratation de l'entité Post
+        //Création du formulaire
+        $post = new Post();
+        $post->setCreatedAt(new \DateTime());
+        $form = $this->createForm(PostType::class, $post);
+
+        //Hydratation de l'entité post
         $form->handleRequest($request);
+
+        //Traitement du formulaire
         if($form->isSubmitted() and $form->isValid()){
-            $em=$this->getDoctrine()->getManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($post);
             $em->flush();
 
@@ -45,7 +49,8 @@ class DefaultController extends Controller
             [
                 "themeList" => $list,
                 "postList"=>$postListByYear,
-                "postForm"=> $form->createView()]);
+                "postForm" => $form->createView()
+            ]);
     }
 
     /**
@@ -83,40 +88,32 @@ class DefaultController extends Controller
 
         $author = new Author();
 
-        //creer une instance de formulaire
         $form = $this->createForm(
             AuthorType::class,
             $author
         );
 
-        //hydratation du formulaire
         $form->handleRequest($request);
 
         if($form->isSubmitted() and $form->isValid()){
-            $entityManager = $this->getDoctrine()->getManager();
+            $em = $this->getDoctrine()->getManager();
 
-            //encodage du mot de passe
+            //Encodage du mot de passe
             $encoderFactory = $this->get("security.encoder_factory");
             $encoder = $encoderFactory->getEncoder($author);
             $author->setPassword($encoder->encodePassword($author->getPlainPassword(), null));
             $author->setPlainPassword(null);
 
-            $entityManager->persist($author);
-            $entityManager->flush();
+            //Enregistrement dans la base de données
+            $em->persist($author);
+            $em->flush();
 
-            //Redirection
-            return $this->redirectToRoute("homepage");
         }
 
-        return $this->render("default/author-registration.html.twig", [
+        return $this->render("default/author-registration.html.twig",[
             "registrationForm" => $form->createView()
         ]);
-
-
-
-
     }
-
 
     /**
      * @Route("/author-login", name="author_login")
@@ -126,15 +123,12 @@ class DefaultController extends Controller
 
         $securityUtils = $this->get("security.authentication_utils");
 
-
         return $this->render(":default:generic-login.html.twig",
             [
-                "title"=>"Identification des auteurs",
-                "action"=>$this->generateUrl("author_login_check"),
-                "userName"=>$securityUtils->getLastAuthenticationError()
-
-
-
+                "title" => "Identification des auteurs",
+                "action" => $this->generateUrl("author_login_check"),
+                "userName" => $securityUtils->getLastUsername(),
+                "error" => $securityUtils->getLastAuthenticationError()
             ]
         );
     }

@@ -19,36 +19,30 @@
         {% endfor %}
         </tbody>
     </table>
-<br>
-    <hr>
-    <h2>Enregistrement d'un nouveau Post</h2>
-    <br>
-    <hr>
+
+    <h2>Nouveau post</h2>
 
     {{ form(postForm) }}
 
-
-
-
 {% endblock %}
-{% block aside%}
-<h3>Les posts par années</h3>
+
+{% block aside %}
+    <h3>Les posts par années</h3>
     <ul>
-        {%  for item in postList %}
-        <li>
-            <a href="{{ path('post_by_year',{'year': item.yearPublished}) }}">
-            {{ item.yearPublished }} ({{ item.numberOfPosts }})
-            </a></li>
+        {% for item in postList %}
+            <li>
+                <a href="{{ path('post_by_year', {'year': item.yearPublished}) }}">
+                    {{ item.yearPublished }} ({{ item.numberOfPosts }})
+                </a>
+            </li>
         {% endfor %}
     </ul>
 {% endblock %}
 
-{% block javascripts%}
+{% block javascripts %}
+    {{ parent() }}
+
     <script src="{{ asset('bundles/ivoryckeditor/ckeditor.js') }}"></script>
-
-
 {% endblock %}
-
-
 
 

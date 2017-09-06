@@ -25,21 +25,21 @@ class Author implements \Serializable, UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="FirstName", type="string", length=80)
+     * @ORM\Column(name="firstName", type="string", length=50)
      */
     private $firstName;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=80)
+     * @ORM\Column(name="name", type="string", length=50)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=150, unique=true)
+     * @ORM\Column(name="email", type="string", length=50, unique=true)
      */
     private $email;
 
@@ -51,12 +51,12 @@ class Author implements \Serializable, UserInterface
     private $password;
 
     /**
-     * @var
+     * @var string
      */
     private $plainPassword;
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getPlainPassword()
     {
@@ -64,7 +64,7 @@ class Author implements \Serializable, UserInterface
     }
 
     /**
-     * @param mixed $plainPassword
+     * @param string $plainPassword
      * @return Author
      */
     public function setPlainPassword($plainPassword)
@@ -189,7 +189,6 @@ class Author implements \Serializable, UserInterface
     public function serialize()
     {
         return serialize([
-            // je choisis ici les fonctions que je veux serialiser
             $this->id,
             $this->email,
             $this->name,
@@ -208,12 +207,11 @@ class Author implements \Serializable, UserInterface
      */
     public function unserialize($serialized)
     {
-       $data = unserialize($serialized);
-        $this->id=$data[0];
-       $this->id=$data[1];
-       $this->id=$data[2];
-       $this->id=$data[3];
-
+        $data = unserialize($serialized);
+        $this->id = $data[0];
+        $this->email = $data[1];
+        $this->name = $data[2];
+        $this->firstName = $data[3];
     }
 
     /**

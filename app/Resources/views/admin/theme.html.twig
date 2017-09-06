@@ -1,13 +1,16 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <h2>Enregistrement d'un nouveau thème</h2>
-{{ form(themeForm) }}
-    <h2>Liste des thèmes existants :</h2>
+
+    <h2>Nouveau thème</h2>
+    {{ form(themeForm) }}
+
+    <h2>Liste des thèmes</h2>
 
     <ul>
         {% for theme in themeList %}
             <li>{{ theme.name }}</li>
-            {% endfor %}
+        {% endfor %}
     </ul>
+
 {% endblock %}

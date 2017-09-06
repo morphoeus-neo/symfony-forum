@@ -7,25 +7,24 @@ security:
         in_memory:
             memory:
               users:
-                admin:
-                  password: $2y$15$TnfApdKyysFV3t0WXxdbc.a.AxUgljBIp.XmKdgo5CucIYOj96CPq
-                  roles: ["ROLE-SUPER_ADMIN","ROLE_ADMIN"]
+                admin: {password: $2y$15$z/7jwr9xRbJcxM2Wl4l60euBPOiqUSxvHT8dej8CH2GrJrZXoDkke, roles: ["ROLE_ADMIN"]}
+                god:
+                  password: $2y$15$BgbGTBL253s082G1RQnjrOPR0NsIaMrxNbFcDGmeqsFNuTEjSxJRi
+                  roles: ["ROLE_SUPER_ADMIN", "ROLE_ADMIN"]
+
         author_provider:
           entity:
             class: AppBundle:Author
             property: email
 
     encoders:
-      Symfony\Component\Security\Core\User\User:
-        algorithm: bcrypt
-        cost: 15
+        Symfony\Component\Security\Core\User\User:
+          algorithm: bcrypt
+          cost: 15
+        AppBundle\Entity\Author:
+          algorithm: bcrypt
 
-      AppBundle\Entity\Author: plaintext
-        #algorithm: sha1
-
-
-
-    role-hierarchy:
+    role_hierarchy:
       ROLE_SUPER_ADMIN: ROLE_ALLOWED_TO_SWITCH
 
     firewalls:
@@ -34,11 +33,9 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        #toute route contenant admin passera par ce firewall et passera par le provider cité pour aller chercher les informations
-        admin_login:
+        admin_login_firewall:
           pattern: ^/admin/login$
           anonymous: ~
-
 
         admin_firewall:
           pattern: ^/admin
@@ -56,12 +53,12 @@ security:
             pattern: ^/
             provider: author_provider
             form_login:
-                login_path: author_login
-                check_path: author_login_check
-                default_target_path: homepage
+              login_path: author_login
+              check_path: author_login_check
+              default_target_path: homepage
             logout:
-                path: author_logout
-                target: homepage
+              path: author_logout
+              target: homepage
             # activate different ways to authenticate
 
             # http://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
@@ -69,6 +66,5 @@ security:
 
             # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
             #form_login: ~
-
     access-control:
-      - {path: ^/admin/secure, role: ROLE_SUPER_ADMIN }
+      - {path: ^/admin/secure, roles: ROLE_SUPER_ADMIN }

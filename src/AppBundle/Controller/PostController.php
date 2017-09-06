@@ -3,8 +3,10 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Form\PostType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -52,6 +54,52 @@ class PostController extends Controller
             "title" => "Liste des posts par année ({$year})",
             "postList" => $postRepository->getPostsByYear($year)
         ]);
+    }
+
+    /**
+     * @Route("/post/modif/{id}", name="post_edit")
+     * @param Request $request
+     * @param Post $post
+     * @return Response
+     */
+    public function editAction(Request $request, Post $post)
+    {
+        //on récupère l'utilisateur
+        $user = $this->getUser();
+        //on récupères les roles de l'utilisateur
+        $roles = isset($user)?$user->getRoles():[];
+        // on récupère l'Id de l'utilisateur
+        $userId= isset($user)?$user->getId():null;
+        //
+        if (!in_array("ROLE_AUTHOR", $roles) || $userId != $post->getAuthor()->getId() )
+        {
+            throw new AccessDeniedException("Vous n'avez pas les droits pour Modifier ce post");
+
+        }
+
+        // Création du formulaire
+        //je passes en argument une entitée déjà hydratéé
+        $form = $this->createForm(PostType::class, $post);
+
+        // hydratation de l'entitée
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() and $form->isValid())
+        {
+            //création du formulaire
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($post);
+            $em->flush();
+
+            //Redirection vers le post pour modification
+            $this->redirectToRoute(
+                "theme_details",
+                ["id"=> $post->getTheme()->getId()]);
+
+        }
+
+        // Génération de la vue
+        return $this->render("post/edit.html.twig", ["postForm"=>$form->createView()]);
     }
 
 }

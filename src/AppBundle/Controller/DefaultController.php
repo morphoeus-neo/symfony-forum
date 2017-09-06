@@ -27,30 +27,47 @@ class DefaultController extends Controller
         $list = $repository->getAllThemes()->getArrayResult();
         $postListByYear = $postRepository->getPostsGroupedByYear();
 
-        //Création du formulaire
-        $post = new Post();
-        $post->setCreatedAt(new \DateTime());
-        $form = $this->createForm(PostType::class, $post);
+        //Gestion des nouveaux Posts
 
-        //Hydratation de l'entité post
-        $form->handleRequest($request);
 
-        //Traitement du formulaire
-        if($form->isSubmitted() and $form->isValid()){
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($post);
-            $em->flush();
+        //te renvoi un utilisateur loggué même si celui-ci est annonyme
+        $user = $this->getUser();
+        $roles = isset($user)?$user->getRoles():[];
+        $formView = null;
 
-            //Redirection
-            return $this->redirectToRoute("homepage");
+        if (in_array("ROLE_AUTHOR", $roles)) {
+
+
+            //Création du formulaire
+            $post = new Post();
+            $post->setCreatedAt(new \DateTime());
+            $post->setAuthor($user);
+            $form = $this->createForm(PostType::class, $post);
+
+            //Hydratation de l'entité post
+            $form->handleRequest($request);
+
+            //Traitement du formulaire
+            if ($form->isSubmitted() and $form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($post);
+                $em->flush();
+
+                //Redirection
+                return $this->redirectToRoute("homepage");
+            }
+            $formView=$form->createView();
         }
-
+        //Fin de traitement des nouveaux Posts
         return $this->render('default/index.html.twig',
             [
                 "themeList" => $list,
-                "postList"=>$postListByYear,
-                "postForm" => $form->createView()
+                "postList" => $postListByYear,
+                "postForm" => $formView
             ]);
+
+
+
     }
 
     /**
@@ -58,7 +75,8 @@ class DefaultController extends Controller
      * @param $id
      * @return Response
      */
-    public function themeAction($id){
+    public function themeAction($id)
+    {
 
         $repository = $this->getDoctrine()
             ->getRepository("AppBundle:Theme");
@@ -67,7 +85,7 @@ class DefaultController extends Controller
 
         $allThemes = $repository->getAllThemes()->getArrayResult();
 
-        if(! $theme){
+        if (!$theme) {
             throw new NotFoundHttpException("Thème introuvable");
         }
 
@@ -84,7 +102,8 @@ class DefaultController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function registrationAction(Request $request){
+    public function registrationAction(Request $request)
+    {
 
         $author = new Author();
 
@@ -95,7 +114,7 @@ class DefaultController extends Controller
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() and $form->isValid()){
+        if ($form->isSubmitted() and $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
             //Encodage du mot de passe
@@ -110,7 +129,7 @@ class DefaultController extends Controller
 
         }
 
-        return $this->render("default/author-registration.html.twig",[
+        return $this->render("default/author-registration.html.twig", [
             "registrationForm" => $form->createView()
         ]);
     }
@@ -119,7 +138,8 @@ class DefaultController extends Controller
      * @Route("/author-login", name="author_login")
      * @return Response
      */
-    public function authorLoginAction(){
+    public function authorLoginAction()
+    {
 
         $securityUtils = $this->get("security.authentication_utils");
 

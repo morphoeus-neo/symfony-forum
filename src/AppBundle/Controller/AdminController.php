@@ -18,6 +18,31 @@ class AdminController extends Controller
 {
 
     /**
+     * @Route("/", name="admin_home")
+     * @return Response
+     */
+    public function indexAction(){
+        return $this->render("admin/index.html.twig");
+    }
+
+    /**
+     * @Route("/login", name="admin_login")
+     * @return Response
+     */
+    public function admin_loginAction(){
+
+        $securityUtils = $this->get("security.authentication_utils");
+        $lastUserName = $securityUtils->getLastUsername();
+        $error = $securityUtils->getLastAuthenticationError();
+
+        return $this->render("default/generic-login.html.twig",[
+            "action" => $this->generateUrl("admin_login_check"),
+            "title" => "Login des administrateurs",
+            "userName" => $lastUserName,
+            "error" => $error
+        ]);
+    }
+    /**
      * @Route("/themes", name="admin_themes")
      * @return Response
      */
@@ -49,6 +74,14 @@ class AdminController extends Controller
             "themeList" => $themeList,
             "themeForm" => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/secure", name="admin_only_god")
+     * @return Response
+     */
+    public function onlyGodAction(){
+        return $this->render("admin/god.html.twig");
     }
 
 }
